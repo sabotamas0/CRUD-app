@@ -1,0 +1,70 @@
+﻿@page "/addEmployee"
+@using BlazorApp.Data
+@using BlazorApp.Interfaces
+@using BlazorApp.DTO_s
+@using BlazorApp.Enums
+@using BlazorApp.Validators
+@inject IEmployeeService EmployeeService
+
+<EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit">
+    <h2>Add new Employee:</h2>
+    <FluentValidationValidator/>
+       <ValidationSummary />
+    <label class="form-label">HireDate:</label> <InputDate class="form-control"
+                                                       @bind-Value="Model.HireDate" />
+    <label class="form-label">Name:</label> <InputText class="form-control"
+                                                          @bind-Value="Model.Name" />
+    <label class="form-label">Email:</label> <InputText class="form-control"
+                                                       @bind-Value="Model.Email" />
+    <label class="form-label">Phone:</label> <InputText class="form-control"
+                                                        @bind-Value="Model.Phone" />
+    <label class="form-label">Age:</label> <InputNumber class="form-control"
+                                                        @bind-Value="Model.Age" />
+    
+    <div class="form-inline">
+        <div class="form-group">
+            <label class="form-label">Salary:</label> <InputNumber class="form-control"
+                                                                   @bind-Value="Model.Salary" />
+            <label class="form-label">Net Value?:</label>
+
+            <InputCheckbox @bind-Value="@Model.IsNetSalary">
+
+            </InputCheckbox>
+        </div>
+    </div>
+    <label class="form-label">Prefered Currency:</label>
+
+    <InputSelect class="form-control" @bind-Value="@Model.PreferedCurrency">
+        @foreach (var currency in Enum.GetValues(typeof(CURRENCY)))
+        {
+            <option value="@currency">@currency</option>
+        }
+    </InputSelect>
+
+    <label class="form-label">Department:</label>
+
+    <InputSelect class="form-control" @bind-Value="@Model.Department">
+        @foreach (var department in Enum.GetValues(typeof(DEPARTMENT)))
+        {
+            <option value="@department">@department</option>
+        }
+    </InputSelect>
+
+    <div class="text-right mt-2">
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</EditForm>
+@code {
+    public EmployeeDto? Model { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Model = new();
+        Model.HireDate = DateTime.Now;
+    }
+
+    private void HandleValidSubmit()
+    {
+        EmployeeService.AddEmployee(Model);
+    }
+}
