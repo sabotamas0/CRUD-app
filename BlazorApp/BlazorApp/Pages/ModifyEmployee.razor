@@ -1,4 +1,4 @@
-﻿@page "/addEmployee"
+﻿@page "/modifyEmployee/{id:guid}"
 @using BlazorApp.Data
 @using BlazorApp.Interfaces
 @using BlazorApp.DTO_s
@@ -8,20 +8,20 @@
 @inject NavigationManager NavigationManager
 
 <EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit">
-    <h2>Add new Employee:</h2>
-    <FluentValidationValidator/>
-       <ValidationSummary />
+    <h2>Modify Employee:</h2>
+    <FluentValidationValidator />
+    <ValidationSummary />
     <label class="form-label">Hire Date:</label> <InputDate class="form-control"
-                                                       @bind-Value="Model.HireDate" />
+                                                           @bind-Value="Model.HireDate" />
     <label class="form-label">Name:</label> <InputText class="form-control"
-                                                          @bind-Value="Model.Name" />
+                                                       @bind-Value="Model.Name" />
     <label class="form-label">Email:</label> <InputText class="form-control"
-                                                       @bind-Value="Model.Email" />
+                                                        @bind-Value="Model.Email" />
     <label class="form-label">Phone:</label> <InputText class="form-control"
                                                         @bind-Value="Model.Phone" />
     <label class="form-label">Age:</label> <InputNumber class="form-control"
                                                         @bind-Value="Model.Age" />
-    
+
     <div class="form-inline">
         <div class="form-group">
             <label class="form-label">Salary:</label> <InputNumber class="form-control"
@@ -58,15 +58,17 @@
 @code {
     public EmployeeDto? Model { get; set; }
 
+    [Parameter]
+    public Guid id { get; set; }
+
     protected override void OnInitialized()
     {
-        Model = new();
-        Model.HireDate = DateTime.Now;
+        Model = EmployeeService.GetEmployeeById(id);
     }
 
     private void HandleValidSubmit()
     {
-        EmployeeService.AddEmployee(Model);
+        EmployeeService.UpdateEmployee(Model);
         NavigationManager.NavigateTo("getEmployees");
     }
 }

@@ -19,22 +19,26 @@ namespace BlazorApp.Validators
             .WithMessage("Age must be number Beetween 16 , 80");
             RuleFor(x => x.Name).NotEmpty().NotNull().WithMessage("Enter Employee name");
             RuleFor(x => x.Phone).NotEmpty().NotNull().WithMessage("Enter Employee phone");
-            RuleFor(m => new { m.Phone }).Must(x => !IsEmployeePhoneExist(x.Phone,employees)).WithMessage("Existing Employee Phone Number!");
+            RuleFor(m => new { m.Id, m.Phone }).Must(x => !IsEmployeePhoneExist(x.Id, x.Phone,employees)).WithMessage("Existing Employee Phone Number!");
             RuleFor(x => x.Email).NotEmpty().NotNull().WithMessage("Enter Employee email").EmailAddress().WithMessage("A valid email is required");
-            RuleFor(m => new { m.Email }).Must(x => !IsEmployeeEmailExist(x.Email, employees)).WithMessage("Existing Employee Email!");
+            RuleFor(m => new { m.Id, m.Email }).Must(x => !IsEmployeeEmailExist(x.Id, x.Email, employees)).WithMessage("Existing Employee Email!");
             When(d => !string.IsNullOrEmpty(d.Phone), () =>
             {
                 RuleFor(m => new { m.Phone }).Must(x => !IsPhoneNumber(x.Phone)).WithMessage("Invalid Phone Number!");
             });
             RuleFor(x => x.HireDate).NotNull().WithMessage("Complete Date is not a valid date.");
+            RuleFor(x => x.Salary).NotNull()
+            .WithMessage("Please Enter Value")
+            .InclusiveBetween(0, 5000000)
+            .WithMessage("Age must be number Beetween 0 , 5000000");
         }
-        public bool IsEmployeePhoneExist(string employeePhone, List<Employee> employees)
+        public bool IsEmployeePhoneExist(Guid id, string employeePhone, List<Employee> employees)
         {
-            return employees.Where(x => x.Phone == employeePhone).Any();
+            return employees.Where(x => x.Phone == employeePhone && x.Id != id).Any();
         }
-        public bool IsEmployeeEmailExist(string employeeEmail, List<Employee> employees)
+        public bool IsEmployeeEmailExist(Guid id, string employeeEmail, List<Employee> employees)
         {
-            return employees.Where(x => x.Email == employeeEmail).Any();
+            return employees.Where(x => x.Email == employeeEmail && x.Id != id).Any();
         }
         public bool IsPhoneNumber(string number)
         {

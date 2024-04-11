@@ -2,57 +2,76 @@
 @using BlazorApp.Interfaces
 @using BlazorApp.Data
 @inject IEmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+
+<div class="@styleInfo">
+    <div class="modale-dialog">
+        <div class="modale-header">
+            <h2>Please, confirm the deletion</h2>
+            <button onclick="@CloseModal" class="btn-close closemodale"></button>
+        </div>
+        <div class="modale-body">
+            <div class="toooltip">
+                <button onclick="@DeleteEmployee" class="btn btn-success"><i class="bi bi-check"></i></button>
+                <span class="tooltiptext">Confirm</span>
+            </div>
+            <div class="toooltip">
+                <button onclick="@CloseModal" class="btn btn-danger"><i class="bi bi-x"></i></button>
+                <span class="tooltiptext">Cancel</span>
+            </div>
+        </div>
+    </div>
+</div>
 
 @if (employees.Any() && employees != null)
 {
-    <div class="container">
-        <h2>Current Employees:</h2>
-        <div class="row">
-            <div class="col-12">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>HireDate</th>
-                            <th>Department</th>
-                            <th>Salary</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < employees.Count; ++i)
-                        {
-                            <tr id="@employees[i].Id">
-                                <td>@employees[i].Name</td>
-                                <td>@employees[i].Email</td>
-                                <td>@employees[i].Phone</td>
-                                <td>@employees[i].HireDate</td>
-                                <td>@employees[i].Department.ToString()</td>
-                                @if (employees[i].IsNetSalary)
-                                {
-                                    <td>@($"{employees[i].Salary} {employees[i].PreferedCurrency.ToString()}(Net)")</td>
-                                }
-                                else
-                                {
-                                    <td>@($"{employees[i].Salary} {employees[i].PreferedCurrency.ToString()}(Gross)")</td>
-                                }
-                                <td>
-                                    <div class="toooltip">
-                                        <button class="btn btn-success" onclick="ModifyTransaction(this)" id="ModifyTransaction"><i class="fas fa-edit"></i></button>
-                                        <span class="tooltiptext">Modify</span>
-                                    </div>
 
-                                    <div class="toooltip">
-                                        <button id="delete" onclick="RevealModal(this)" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
-                                        <span class="tooltiptext">Delete</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+    <h2>Current Employees:</h2>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Hire Date</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var employee in employees)
+                    {
+                        <tr id="@employee.Id">
+                            <td>@employee.Name</td>
+                            <td>@employee.Email</td>
+                            <td>@employee.Phone</td>
+                            <td>@employee.HireDate</td>
+                            <td>@employee.Department.ToString()</td>
+                            @if (employee.IsNetSalary)
+                            {
+                                <td>@($"{employee.Salary} {employee.PreferedCurrency.ToString()}(Net)")</td>
+                            }
+                            else
+                            {
+                                <td>@($"{employee.Salary} {employee.PreferedCurrency.ToString()}(Gross)")</td>
+                            }
+                            <td>
+                                <div class="toooltip">
+                                    <button class="btn btn-success" @onclick="() => ModifyEmployee(employee.Id)"><i class="fas fa-edit"></i></button>
+                                    <span class="tooltiptext">Modify</span>
+                                </div>
+
+                                <div class="toooltip">
+                                     <button @onclick="() => RevealModal(employee.Id)" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                                    <span class="tooltiptext">Delete</span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 }
@@ -61,10 +80,37 @@ else
     <h3>Currently, there are no Employees!</h3>
 }
 @code {
+    public string styleInfo = "";
+
+    public Guid Id;
+
     private List<Employee>? employees;
 
     protected override void OnInitialized()
     {
         employees = EmployeeService.GetAllEmployees();
+    }
+
+    private void ModifyEmployee(Guid id)
+    {
+        NavigationManager.NavigateTo($"modifyEmployee/{id}");
+    }
+
+    private void CloseModal()
+    {
+        styleInfo = "modale ";
+    }
+
+    private void DeleteEmployee()
+    {
+        EmployeeService.DeleteEmployee(Id);
+        styleInfo = "modale ";
+        NavigationManager.NavigateTo("getEmployees",true);
+    }
+
+    private void RevealModal(Guid id)
+    {
+        styleInfo = "modale " + "opened";
+        Id = id;
     }
 }

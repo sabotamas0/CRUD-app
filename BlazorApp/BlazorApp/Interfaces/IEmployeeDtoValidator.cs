@@ -8,8 +8,8 @@ namespace BlazorApp.Interfaces
 {
     public interface IEmployeeDtoValidator<TValidator> : IValidator
     {
-        public bool IsEmployeePhoneExist(string employeePhone, List<Employee> employees);
-        public bool IsEmployeeEmailExist(string employeeEmail, List<Employee> employees);
+        public bool IsEmployeePhoneExist(Guid id,string employeePhone, List<Employee> employees);
+        public bool IsEmployeeEmailExist(Guid id, string employeeEmail, List<Employee> employees);
         public bool IsPhoneNumber(string number);
     }
 }

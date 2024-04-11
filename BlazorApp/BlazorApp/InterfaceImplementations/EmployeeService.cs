@@ -1,6 +1,8 @@
-﻿using BlazorApp.Data;
+﻿using AutoMapper;
+using BlazorApp.Data;
 using BlazorApp.DTO_s;
 using BlazorApp.Interfaces;
+using System.Net;
 using System.Transactions;
 
 namespace BlazorApp.InterfaceImplementations
@@ -8,7 +10,8 @@ namespace BlazorApp.InterfaceImplementations
     public class EmployeeService : IEmployeeService
     {
         private IEmployeeRepository _employeeRepository;
-        public EmployeeService(IEnumerable<IEmployeeRepository> repositories)
+        private IMapper _mapper;
+        public EmployeeService(IEnumerable<IEmployeeRepository> repositories, IMapper mapper)
         {
             foreach (var repository in repositories)
             {
@@ -18,6 +21,7 @@ namespace BlazorApp.InterfaceImplementations
                     break;
                 }
             }
+            _mapper = mapper;
         }
 
         public void AddEmployee(EmployeeDto employee)
@@ -39,10 +43,10 @@ namespace BlazorApp.InterfaceImplementations
         {
             _employeeRepository.Update(employee);
         }
-        public Employee GetEmployeeById(Guid employeeId)
+        public EmployeeDto GetEmployeeById(Guid employeeId)
         {
             var employees = _employeeRepository.Read();
-            return employees.Where(x => x.Id == employeeId).Single();
+            return _mapper.Map<EmployeeDto>(employees.Where(x => x.Id == employeeId).Single());
         }
     }
 }

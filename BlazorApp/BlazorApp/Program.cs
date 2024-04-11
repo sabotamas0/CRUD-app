@@ -3,9 +3,7 @@ using BlazorApp.DTO_s;
 using BlazorApp.InterfaceImplementations;
 using BlazorApp.Interfaces;
 using BlazorApp.Validators;
-using FluentValidation;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using BlazorApp.AutomapperProfiles;
 
 namespace BlazorApp
 {
@@ -22,6 +20,7 @@ namespace BlazorApp
             builder.Services.AddScoped<IEmployeeRepository, JsonRepository>();
             builder.Services.AddTransient<IEmployeeService, EmployeeService>();
             builder.Services.AddTransient<IEmployeeDtoValidator<EmployeeDto>, EmployeeDtoValidator>();
+            builder.Services.AddAutoMapper(typeof(EmployeeProfile));
 
             var app = builder.Build();
 

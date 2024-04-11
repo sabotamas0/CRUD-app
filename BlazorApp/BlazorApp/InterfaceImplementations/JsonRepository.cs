@@ -2,11 +2,22 @@
 using BlazorApp.Interfaces;
 using BlazorApp.DTO_s;
 using BlazorApp.Data;
+using AutoMapper;
+using Newtonsoft.Json.Linq;
 
 namespace BlazorApp.InterfaceImplementations
 {
     public class JsonRepository : IEmployeeRepository
     {
+        private IMapper _mapper;
+        public JsonRepository(IMapper mapper)
+        {
+            if(!File.Exists("Employees.json"))
+            {
+                System.IO.File.WriteAllText("Employees.json", JsonConvert.SerializeObject(new List<Employee>()));
+            }
+            _mapper = mapper;
+        }
         private List<Employee> _Employees;
         private List<Employee> Employees
         {
@@ -38,7 +49,8 @@ namespace BlazorApp.InterfaceImplementations
 
         public void Update(EmployeeDto employee)
         {
-            //TODO
+            int index = Employees.FindIndex(i => i.Id == employee.Id);
+            Employees[index] = _mapper.Map<Employee>(employee);
             string json = JsonConvert.SerializeObject(Employees.ToArray());
 
             System.IO.File.WriteAllText("Employees.json", json);
