@@ -13,10 +13,6 @@ namespace BlazorApp.Validators
         {
             _employeeService = employeeService;
             var employees = employeeService.GetAllEmployees();
-            RuleFor(x => x.Age).NotNull()
-            .WithMessage("Please Enter Value")
-            .InclusiveBetween(16, 80)
-            .WithMessage("Age must be number Beetween 16 , 80");
             RuleFor(x => x.Name).NotEmpty().NotNull().WithMessage("Enter Employee name");
             RuleFor(x => x.Phone).NotEmpty().NotNull().WithMessage("Enter Employee phone");
             RuleFor(m => new { m.Id, m.Phone }).Must(x => !IsEmployeePhoneExist(x.Id, x.Phone,employees)).WithMessage("Existing Employee Phone Number!");

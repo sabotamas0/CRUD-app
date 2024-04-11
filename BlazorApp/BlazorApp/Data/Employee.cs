@@ -9,20 +9,18 @@ namespace BlazorApp.Data
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public int Age { get; set; }
 
         public double Salary { get; set; }
         public DEPARTMENT Department { get; set; }
         public bool IsNetSalary { get; set; }
         public CURRENCY PreferedCurrency { get; set; }
-        public Employee(Guid id, DateTime? hiredate, string name, string email, string phone, int age, double salary, DEPARTMENT department, bool isnetsalary, CURRENCY preferedcurrency)
+        public Employee(Guid id, DateTime? hiredate, string name, string email, string phone, double salary, DEPARTMENT department, bool isnetsalary, CURRENCY preferedcurrency)
         {
             Id = id;
             HireDate= hiredate;
             Name = name;
             Email = email;
             Phone = phone;
-            Age = age;
             Salary = salary;
             Department = department;
             IsNetSalary = isnetsalary;

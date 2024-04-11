@@ -16,7 +16,6 @@ namespace BlazorApp
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
-            builder.Services.AddSingleton<WeatherForecastService>();
             builder.Services.AddScoped<IEmployeeRepository, JsonRepository>();
             builder.Services.AddTransient<IEmployeeService, EmployeeService>();
             builder.Services.AddTransient<IEmployeeDtoValidator<EmployeeDto>, EmployeeDtoValidator>();

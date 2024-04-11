@@ -59,7 +59,7 @@ namespace BlazorApp.InterfaceImplementations
         public void Create(EmployeeDto employee)
         {
            
-            var newEmployee = new Employee(Guid.NewGuid(), employee.HireDate,employee.Name,employee.Email,employee.Phone,employee.Age,employee.Salary,employee.Department,employee.IsNetSalary,employee.PreferedCurrency);
+            var newEmployee = new Employee(Guid.NewGuid(), employee.HireDate,employee.Name,employee.Email,employee.Phone,employee.Salary,employee.Department,employee.IsNetSalary,employee.PreferedCurrency);
 
             Employees.Add(newEmployee);
 

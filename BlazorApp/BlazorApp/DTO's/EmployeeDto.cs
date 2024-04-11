@@ -9,7 +9,6 @@ namespace BlazorApp.DTO_s
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public int Age { get; set; }
 
         public double Salary { get; set; }
         public DEPARTMENT Department { get; set; }
